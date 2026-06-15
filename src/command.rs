@@ -1,10 +1,10 @@
-enum Command {
+pub enum Command {
     Replace(Replace),
     Undo,
     Redo,
     Write,
 }
-struct Replace {
+pub struct Replace {
     from: String,
     to: String,
 }

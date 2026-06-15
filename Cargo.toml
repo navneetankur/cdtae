@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 thiserror = "2.0"
 anyhow = "1.0"
+strum = {version = "0.28", features = ["derive"]}
 
 [lints.rust]
 # to remove later

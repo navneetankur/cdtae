@@ -1,4 +1,7 @@
-#[derive(Debug, PartialEq)]
+use strum::{EnumDiscriminants, VariantNames};
+
+#[derive(Debug, PartialEq, EnumDiscriminants, VariantNames)]
+#[strum(serialize_all = "lowercase")]
 pub enum Command<'a> {
     Replace(Replace<'a>),
     Undo,

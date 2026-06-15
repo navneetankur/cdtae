@@ -1,12 +1,12 @@
 #[derive(Debug, PartialEq)]
-pub enum Command {
-    Replace(Replace),
+pub enum Command<'a> {
+    Replace(Replace<'a>),
     Undo,
     Redo,
     Write,
 }
 #[derive(Debug, PartialEq)]
-pub struct Replace {
-    from: String,
-    to: String,
+pub struct Replace<'a> {
+    pub from: &'a str,
+    pub to: &'a str,
 }

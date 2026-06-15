@@ -6,7 +6,7 @@ pub enum ParseError {
 }
 type ParseResult<T> = Result<T, ParseError>;
 
-pub fn parse(input: &str) -> ParseResult<Command> {
+pub fn parse<'a>(input: &'a str) -> ParseResult<Command<'a>> {
     todo!()
 }
 #[cfg(test)]

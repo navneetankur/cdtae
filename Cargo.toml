@@ -8,6 +8,7 @@ edition = "2024"
 [lints.rust]
 # to remove later
 dead_code = "allow"
+unused_imports = "allow"
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }
 correctness = { level = "warn", priority = -1 }

@@ -22,7 +22,7 @@ fn replace<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
     let words = &env.words;
     if !words.replace.contains_str(replace_p) {return ParseError::NotMe.err()};
     let from = input.next().ok_or(ParseError::Malformed)?;
-    let with_p = input.next().ok_or(ParseError::NotMe)?;
+    let with_p = input.next().ok_or(ParseError::Malformed)?;
     if !words.with.contains_str(with_p) {return ParseError::Malformed.err()};
     let to = input.next().ok_or(ParseError::Malformed)?;
     return Ok(Command::Replace(Replace {

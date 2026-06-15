@@ -65,4 +65,14 @@ use super::*;
             to: "y",
         })));
     }
+    #[test]
+    fn t_parse_replace_err() {
+        let output = parse(&Env::default(), "replace x y");
+        assert_eq!(output, Err(ParseError::Malformed));
+    }
+    #[test]
+    fn t_parse_replace_notme() {
+        let output = replace(&Env::default(), "Twinkle twinkle");
+        assert_eq!(output, Err(ParseError::NotMe));
+    }
 }

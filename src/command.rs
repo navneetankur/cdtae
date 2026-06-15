@@ -1,7 +1,8 @@
-use strum::{EnumDiscriminants, VariantNames};
+use strum::{EnumDiscriminants, EnumString, IntoStaticStr, VariantNames};
 
 #[derive(Debug, PartialEq, EnumDiscriminants, VariantNames)]
-#[strum(serialize_all = "lowercase")]
+#[strum_discriminants(derive(EnumString, IntoStaticStr))]
+#[strum_discriminants(strum(serialize_all = "lowercase"))]
 pub enum Command<'a> {
     Replace(Replace<'a>),
     Undo,

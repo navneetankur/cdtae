@@ -1,6 +1,6 @@
 pub struct Words {
-    with: Vec<String>,
-    replace: Vec<String>,
+    pub with: Vec<String>,
+    pub replace: Vec<String>,
 }
 impl Default for Words {
     fn default() -> Self {

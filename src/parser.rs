@@ -1,53 +1,44 @@
-use crate::{command::Command, env::Env};
+use suffixes::wrap::WrappedErrResult;
+
+use crate::{command::{Command, Replace}, env::Env, ext::ContainsStr};
 
 pub fn parse<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
     match replace(env, input) {
-        MaybeCommand::Command(cmd) => return Ok(cmd),
-        MaybeCommand::Error(e) => return Err(e),
-        MaybeCommand::None => {}
+        Ok(c) => return Ok(c),
+        Err(e) if e == ParseError::NotMe => {/*continue trying other commands*/},
+        Err(e) => return e.err(),
     }
     match input.trim() {
         "undo" => Ok(Command::Undo),
         "redo" => Ok(Command::Redo),
-        "write" => Ok(Command::Write),
-        _ => todo!(),
+        "write" => ParseError::Todo("write".into()).err(),
+        _ => unimplemented!(),
     }
 }
 
-fn replace<'a>(env: &Env, input: &'a str) -> MaybeCommand<'a> {
-    let words: Vec<&str> = input.split_whitespace().collect();
-    if words.len() < 2 {
-        return MaybeCommand::None;
-    }
-    let replace_words = &env.words.replace;
-    let verb_matches = if replace_words.is_empty() {
-        words[0] == "replace"
-    } else {
-        replace_words.iter().any(|w| w == words[0])
-    };
-    if !verb_matches {
-        return MaybeCommand::None;
-    }
-    if words.len() != 4 || !env.words.with.iter().any(|w| w == words[2]) {
-        return MaybeCommand::Error(ParseError::MalformedReplace);
-    }
-    MaybeCommand::Command(Command::Replace(crate::command::Replace {
-        from: words[1],
-        to: words[3],
-    }))
-}
-
-
-enum MaybeCommand<'a> {
-    Command(Command<'a>),
-    None,
-    Error(ParseError),
+fn replace<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
+    let mut input = input.split_whitespace();
+    let replace_p = input.next().ok_or(ParseError::NotMe)?;
+    let words = &env.words;
+    if !words.replace.contains_str(replace_p) {return ParseError::NotMe.err()};
+    let from = input.next().ok_or(ParseError::Malformed)?;
+    let with_p = input.next().ok_or(ParseError::NotMe)?;
+    if !words.with.contains_str(with_p) {return ParseError::Malformed.err()};
+    let to = input.next().ok_or(ParseError::Malformed)?;
+    return Ok(Command::Replace(Replace {
+        from,
+        to,
+    }));
 }
 
 #[derive(thiserror::Error, Debug, PartialEq)]
 pub enum ParseError {
-    #[error("malformed replace")]
-    MalformedReplace,
+    #[error("malformed")]
+    Malformed,
+    #[error("not me")]
+    NotMe, //think better name. it should say command type is not the one you are trying.
+    #[error("todo: {0}")]
+    Todo(String),
 }
 type ParseResult<T> = Result<T, ParseError>;
 

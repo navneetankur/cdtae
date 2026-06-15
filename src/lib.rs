@@ -1,5 +1,6 @@
 mod command;
 mod parser;
+mod ext;
 mod words;
 mod error;
 mod env;

@@ -6,7 +6,7 @@ impl Default for Words {
     fn default() -> Self {
         Self { 
             with: vec!["with".to_string(), "to".to_string()],
-            replace: Default::default()
+            replace: vec!["replace".to_string()],
         }
     }
 }

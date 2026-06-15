@@ -7,7 +7,7 @@ pub enum Command<'a> {
     Replace(Replace<'a>),
     Undo,
     Redo,
-    Write,
+    Write(&'a str),
 }
 #[derive(Debug, PartialEq)]
 pub struct Replace<'a> {

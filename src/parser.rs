@@ -11,8 +11,7 @@ pub fn parse<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
     match input.trim() {
         "undo" => Ok(Command::Undo),
         "redo" => Ok(Command::Redo),
-        "write" => ParseError::Todo("write".into()).err(),
-        _ => unimplemented!(),
+        _ => Ok(Command::Write(input)),
     }
 }
 

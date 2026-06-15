@@ -1,4 +1,9 @@
 use crate::command::Command;
+
+pub fn parse<'a>(input: &'a str) -> ParseResult<Command<'a>> {
+    todo!()
+}
+
 #[derive(thiserror::Error, Debug, PartialEq)]
 pub enum ParseError {
     #[error("malformed replace")]
@@ -6,13 +11,9 @@ pub enum ParseError {
 }
 type ParseResult<T> = Result<T, ParseError>;
 
-pub fn parse<'a>(input: &'a str) -> ParseResult<Command<'a>> {
-    todo!()
-}
 #[cfg(test)]
 mod tests {
     use crate::command;
-
 use super::*;
     #[test]
     fn t_parse_undo() {

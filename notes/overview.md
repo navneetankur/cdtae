@@ -197,3 +197,5 @@ O2 — Greedy commit: commit the instant a command fully parses. A multi-word ta
 O3 — Timeout length for V2 window.
 
 O4 — Literal escape idiom for dictating command words as content. Delimited quote/unquote, not a mode switch.
+
+O5 - what does "undo here is a fox" mean? Command(undo) and then Write(here is fox) or just Write(undo here is a fox)?

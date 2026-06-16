@@ -15,7 +15,6 @@ enum Command {
     },
     Undo,
     Redo,
-    Show,
     Interrupt,
 }
 ```
@@ -56,6 +55,8 @@ Prefer a simple, reliable implementation over a clever one.
 
 A snapshot-based history is acceptable.
 
+Each resolution (command or flush-as-Write) is one history entry. Undo always recovers a full resolution, never an individual input.
+
 ---
 
 ## 5. Keep Voice in Mind
@@ -77,3 +78,47 @@ better future speech UX
 ```
 
 prefer the speech-friendly design unless complexity becomes unreasonable.
+
+---
+
+## 6. Input Terminology
+
+The unit arriving from VAD is an **input**, not a sentence.
+
+A command may span multiple inputs (in V2).
+
+Do not assume one input = one complete thought.
+
+---
+
+## 7. Incomplete Command Handling (V1)
+
+An input that starts with a known verb but does not fully parse is incomplete.
+
+Flush as Write. Recoverable with Undo.
+
+Do not discard. Do not hold state.
+
+---
+
+## 8. Split Command Measurement (V1 → V2 gate)
+
+Before building the V2 completion window, instrument VAD to measure how often commands arrive split across inputs.
+
+If splits are rare, V1 flush-as-Write + Undo is sufficient.
+
+If splits are common, implement V2 window.
+
+---
+
+## 9. Completion Window (V2 — deferred)
+
+Implement only after measurement in §8 confirms splits are frequent.
+
+See `docs/overview.md` V2 section for mechanism and resolution rules.
+
+Key invariants:
+- Buffer + re-parse on each new input (same stateless parser, no new grammar).
+- All-or-nothing resolution: full parse → execute; failure or timeout → flush entire buffer as one Write.
+- Interrupt → discard (only legitimate discard case).
+- One Undo per resolution, always.

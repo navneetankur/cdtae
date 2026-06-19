@@ -4,9 +4,9 @@ use crate::{command::{Command, Replace}, env::Env, ext::ContainsStr};
 
 pub fn parse<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
     match replace(env, input) {
-        Ok(c) => return Ok(c),
-        Err(e) if e == ParseError::NotMe => {/*continue trying other commands*/},
+        Err(ParseError::NotMe) => {/*continue trying other commands*/},
         Err(e) => return e.err(),
+        Ok(c) => return Ok(c),
     }
     match input.trim() {
         "undo" => Ok(Command::Undo),
@@ -19,10 +19,10 @@ fn replace<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
     let mut input = input.split_whitespace();
     let replace_p = input.next().ok_or(ParseError::NotMe)?;
     let words = &env.words;
-    if !words.replace.contains_str(replace_p) {return ParseError::NotMe.err()};
+    if !words.replace.contains_str(replace_p) {return ParseError::NotMe.err()}
     let from = input.next().ok_or(ParseError::Malformed)?;
     let with_p = input.next().ok_or(ParseError::Malformed)?;
-    if !words.with.contains_str(with_p) {return ParseError::Malformed.err()};
+    if !words.with.contains_str(with_p) {return ParseError::Malformed.err()}
     let to = input.next().ok_or(ParseError::Malformed)?;
     return Ok(Command::Replace(Replace {
         from,

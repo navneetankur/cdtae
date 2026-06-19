@@ -4,6 +4,7 @@ mod ext;
 mod words;
 mod error;
 mod env;
+#[must_use]
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
 }

@@ -1,4 +1,4 @@
-use suffixes::wrap::WrappedErrResult;
+use suffixes::{WrappedResult, wrap::WrappedErrResult};
 
 use crate::{
     command::{Command, Replace},
@@ -12,13 +12,33 @@ pub fn parse<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
         Err(e) => return e.err(),
         Ok(c) => return Ok(c),
     }
-    match input.trim() {
-        "undo" => Ok(Command::Undo),
-        "redo" => Ok(Command::Redo),
-        _ => Ok(Command::Write(input)),
+    match undo(env, input) {
+        Err(ParseError::NotMe) => { /*continue trying other commands*/ }
+        Err(e) => return e.err(),
+        Ok(c) => return Ok(c),
     }
+    match redo(env, input) {
+        Err(ParseError::NotMe) => { /*continue trying other commands*/ }
+        Err(e) => return e.err(),
+        Ok(c) => return Ok(c),
+    }
+    return Ok(Command::Write(input));
 }
 
+fn redo<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
+    if env.words.redo.contains_str(input) {
+        Command::Redo.ok()
+    } else {
+        ParseError::NotMe.err()
+    }
+}
+fn undo<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
+    if env.words.undo.contains_str(input) {
+        Command::Undo.ok()
+    } else {
+        ParseError::NotMe.err()
+    }
+}
 fn replace<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
     let mut input = input.split_whitespace();
     let replace_p = input.next().ok_or(ParseError::NotMe)?;

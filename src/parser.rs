@@ -1,10 +1,14 @@
 use suffixes::wrap::WrappedErrResult;
 
-use crate::{command::{Command, Replace}, env::Env, ext::ContainsStr};
+use crate::{
+    command::{Command, Replace},
+    env::Env,
+    ext::ContainsStr,
+};
 
 pub fn parse<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
     match replace(env, input) {
-        Err(ParseError::NotMe) => {/*continue trying other commands*/},
+        Err(ParseError::NotMe) => { /*continue trying other commands*/ }
         Err(e) => return e.err(),
         Ok(c) => return Ok(c),
     }
@@ -19,15 +23,16 @@ fn replace<'a>(env: &Env, input: &'a str) -> ParseResult<Command<'a>> {
     let mut input = input.split_whitespace();
     let replace_p = input.next().ok_or(ParseError::NotMe)?;
     let words = &env.words;
-    if !words.replace.contains_str(replace_p) {return ParseError::NotMe.err()}
+    if !words.replace.contains_str(replace_p) {
+        return ParseError::NotMe.err();
+    }
     let from = input.next().ok_or(ParseError::Malformed)?;
     let with_p = input.next().ok_or(ParseError::Malformed)?;
-    if !words.with.contains_str(with_p) {return ParseError::Malformed.err()}
+    if !words.with.contains_str(with_p) {
+        return ParseError::Malformed.err();
+    }
     let to = input.next().ok_or(ParseError::Malformed)?;
-    return Ok(Command::Replace(Replace {
-        from,
-        to,
-    }));
+    return Ok(Command::Replace(Replace { from, to }));
 }
 
 #[derive(thiserror::Error, Debug, PartialEq)]
@@ -43,8 +48,8 @@ type ParseResult<T> = Result<T, ParseError>;
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use crate::{command, env::Env};
-use super::*;
     #[test]
     fn t_parse_undo() {
         let env = Env::default();
@@ -59,10 +64,10 @@ use super::*;
     #[test]
     fn t_parse_replace() {
         let output = parse(&Env::default(), "replace x with y");
-        assert_eq!(output, Ok(Command::Replace(command::Replace{ 
-            from: "x",
-            to: "y",
-        })));
+        assert_eq!(
+            output,
+            Ok(Command::Replace(command::Replace { from: "x", to: "y" }))
+        );
     }
     #[test]
     fn t_parse_replace_err() {

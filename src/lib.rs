@@ -1,9 +1,9 @@
 mod command;
-mod parser;
-mod ext;
-mod words;
-mod error;
 mod env;
+mod error;
+mod ext;
+mod parser;
+mod words;
 #[must_use]
 pub fn add(left: u64, right: u64) -> u64 {
     left + right

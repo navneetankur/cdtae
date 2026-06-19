@@ -7,7 +7,7 @@ pub struct Words {
 }
 impl Default for Words {
     fn default() -> Self {
-        Self { 
+        Self {
             with: vec!["with".to_string(), "to".to_string()],
             replace: vec!["replace".to_string()],
             undo: vec!["undo".to_string()],

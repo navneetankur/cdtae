@@ -13,12 +13,20 @@ mod tests {
 
     #[test]
     fn t_contains() {
-        let words = vec!["apple".to_string(), "banana".to_string(), "mango".to_string()];
+        let words = vec![
+            "apple".to_string(),
+            "banana".to_string(),
+            "mango".to_string(),
+        ];
         assert!(words.contains_str("apple"));
     }
     #[test]
     fn t_not_contains() {
-        let words = vec!["apple".to_string(), "banana".to_string(), "mango".to_string()];
+        let words = vec![
+            "apple".to_string(),
+            "banana".to_string(),
+            "mango".to_string(),
+        ];
         assert!(!words.contains_str("dog"));
     }
 }

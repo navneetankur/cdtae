@@ -1,4 +1,8 @@
 # Implementation Notes
+```mermaid
+flowchart LR
+Start(( )) --input--> Parser --Command--> Executor --Updates--> S[State Machine]
+````
 
 ## 1. Command Enum
 
@@ -84,6 +88,8 @@ prefer the speech-friendly design unless complexity becomes unreasonable.
 ## 6. Input Terminology
 
 The unit arriving from VAD is an **input**, not a sentence.
+
+For v1, assume input is a sentence and will create a command.
 
 A command may span multiple inputs (in V2).
 
